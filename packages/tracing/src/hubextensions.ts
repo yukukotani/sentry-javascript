@@ -231,6 +231,12 @@ function _autoloadDatabaseIntegrations(): void {
   }
 
   const packageToIntegrationMapping: Record<string, () => Integration> = {
+    graphql() {
+      const integration = dynamicRequire(module, './integrations/graphql') as {
+        GraphQL: IntegrationClass<Integration>;
+      };
+      return new integration.GraphQL();
+    },
     mongodb() {
       const integration = dynamicRequire(module, './integrations/mongo') as { Mongo: IntegrationClass<Integration> };
       return new integration.Mongo();
