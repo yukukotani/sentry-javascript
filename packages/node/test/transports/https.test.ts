@@ -293,7 +293,8 @@ describe('HTTPSTransport', () => {
         dsn,
         httpsProxy: 'https://example.com:8080',
       });
-      expect(transport.client).toBeInstanceOf(https.Agent);
+      expect(transport.client).toBeInstanceOf(https.Agent); // rather than HttpsProxyAgent
+      delete process.env.no_proxy;
     });
 
     test('no_proxy works with a port', async () => {
@@ -302,8 +303,9 @@ describe('HTTPSTransport', () => {
       const transport = createTransport({
         dsn,
       });
-      expect(transport.client).toBeInstanceOf(https.Agent);
+      expect(transport.client).toBeInstanceOf(https.Agent); // rather than HttpsProxyAgent
       delete process.env.https_proxy;
+      delete process.env.no_proxy;
     });
 
     test('no_proxy works with multiple comma-separated hosts', async () => {
@@ -312,8 +314,9 @@ describe('HTTPSTransport', () => {
       const transport = createTransport({
         dsn,
       });
-      expect(transport.client).toBeInstanceOf(https.Agent);
-      delete process.env.https_proxy;
+      expect(transport.client).toBeInstanceOf(https.Agent); // rather than HttpsProxyAgent
+      delete process.env.http_proxy;
+      delete process.env.no_proxy;
     });
 
     test('can configure tls certificate through client option', async () => {
@@ -327,6 +330,21 @@ describe('HTTPSTransport', () => {
       });
       const requestOptions = (transport.module!.request as jest.Mock).mock.calls[0][0];
       expect(requestOptions.ca).toEqual('mockedCert');
+    });
+
+    test('can use an http proxy with an https DSN', async () => {
+      const transport = createTransport({
+        dsn,
+        httpProxy: 'https://example.com:8080',
+      });
+      const client = (transport.client as unknown) as { proxy: Record<string, string | number>; secureProxy: boolean };
+
+      expect(client).toBeInstanceOf(HttpsProxyAgent);
+      expect(async () => {
+        await transport.sendEvent({
+          message: 'test',
+        });
+      }).not.toThrow();
     });
   });
 });
