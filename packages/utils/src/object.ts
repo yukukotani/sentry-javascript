@@ -108,9 +108,11 @@ function getWalkSource(
       [key: string]: any;
     } = {};
 
+    // Accessing event attributes can throw (see https://github.com/getsentry/sentry-javascript/issues/768 and
+    // https://github.com/getsentry/sentry-javascript/issues/838), but accessing `type` hasn't been wrapped in a
+    // try-catch in at least two years and no one's complained, so that's likely not an issue anymore
     source.type = event.type;
 
-    // Accessing event.target can throw (see getsentry/raven-js#838, #768)
     try {
       source.target = isElement(event.target)
         ? htmlTreeAsString(event.target)
@@ -131,9 +133,9 @@ function getWalkSource(
       source.detail = event.detail;
     }
 
-    for (const i in event) {
-      if (Object.prototype.hasOwnProperty.call(event, i)) {
-        source[i] = event;
+    for (const attr in event) {
+      if (Object.prototype.hasOwnProperty.call(event, attr)) {
+        source[attr] = event[attr];
       }
     }
 
@@ -222,10 +224,15 @@ function normalizeValue<T>(value: T, key?: any): T | string {
     return '[Global]';
   }
 
+  // It's safe to use `window` and `document` here in this manner, as we are asserting using `typeof` first
+  // which won't throw if they are not present.
+
+  // eslint-disable-next-line no-restricted-globals
   if (typeof (window as any) !== 'undefined' && (value as unknown) === window) {
     return '[Window]';
   }
 
+  // eslint-disable-next-line no-restricted-globals
   if (typeof (document as any) !== 'undefined' && (value as unknown) === document) {
     return '[Document]';
   }

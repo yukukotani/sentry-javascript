@@ -79,6 +79,7 @@ export const withSentry = (handler: NextApiHandler): WrappedNextApiHandler => {
         if (currentScope) {
           currentScope.addEventProcessor(event => {
             addExceptionMechanism(event, {
+              mechanism: 'withSentry',
               handled: false,
             });
             return event;
@@ -98,8 +99,6 @@ type WrappedResponseEndMethod = AugmentedResponse['end'];
 
 function wrapEndMethod(origEnd: ResponseEndMethod): WrappedResponseEndMethod {
   return async function newEnd(this: AugmentedResponse, ...args: unknown[]) {
-    // TODO: if the handler errored, it will have popped us out of the domain, so all of our scope data will be missing
-
     const transaction = this.__sentryTransaction;
 
     if (transaction) {

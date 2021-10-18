@@ -4,6 +4,68 @@
 
 - "You miss 100 percent of the chances you don't take. — Wayne Gretzky" — Michael Scott
 
+## 6.13.3
+
+- feat(nextjs): Add ability for integration tests to use linked `@sentry/xxxx` packages (#4019)
+- feat(nextjs): Support `distDir` Next.js option (#3990)
+- fix(tracing): Call hasTracingEnabled with correct options when invoking startTransaction (#4020)
+- ref(browser): Refactor sending client reports w. fetch fallback (#4008)
+- ref(core): Make getTransport method on client optional (#4013)
+- ref(ember): Update htmlbars dependency (#4026)
+- ref(integrations): Minor simplification of ExtraErrorData code (#4024)
+- ref(react): Rely on error.cause to link ErrorBoundary errors (#4005)
+
+## 6.13.2
+
+- fix(browser): Use getGlobalObject for document check (#3996)
+- misc(all): Disallow direct usage of globals (#3999)
+
+## 6.13.1
+
+- fix(browser): Check for document when sending outcomes (#3993)
+
+## 6.13.0
+
+- feat(browser): Client Report Support (#3955)
+- feat(perf): Add experimental option to improve LCP collection (#3879)
+- fix(browser): Make sure that `document.head` or `document.body` exists for `injectReportDialog` (#3972)
+- fix(browser): Parse frames-only `safari(-web)-extension` stack (#3929)
+- fix(ember): Move `ember-source` to `devDependencies` (#3962)
+- fix(hub): Don't set `lastEventID` for transactions (#3966)
+- fix(nextjs): Include nextjs config's `basePath` on `urlPrefix` (#3922)
+- fix(node): Add protocol detection for get/request calls without explict protocol (#3950)
+- fix(node): Disable `autoSessionTracking` if dsn undefined (#3954)
+- fix(vue): Check for matched route existence before starting transaction (#3973)
+- ref(browser): Migrate unit tests from Chai and Karma to Jest (#3965)
+- ref(nextjs): Exclude cross-platform tracing code from bundles (#3978)
+- ref(tracing): Idle transaction refactoring (#3988)
+
+## 6.12.0
+
+- fix(nextjs): Differentiate between webpack 4 and 5 in server builds (#3878)
+- fix(core): Skip native frames while searching frame URLs. (#3897)
+- fix(vue): Attach props only if VM is available (#3902)
+- feat(tracing): Add pg-native support to Postgres integration. (#3894)
+- ref(ember): Update addon to support Ember 4.0.0 (beta) (#3915)
+- feat(react): Make Profiler _mountSpan attribute protected (#3904)
+- fix(ember): allow ember-beta to fail (#3910)
+- fix(tracing): Prevent metrics erroring module load in web workers (#3941)
+- misc(browser): Log when event is dropped by Dedupe integration (#3943)
+
+## 6.11.0
+
+- feat(nextjs): Allow for TypeScript user config files (#3847)
+- fix(browser): Make sure handler exists for LinkedErrors Integration (#3861)
+- fix(core): Skip anonymous callbacks while searching frame URLs. (#3842)
+- fix(core): Stop rejecting in `flush` and `close` when client undefined (#3846)
+- fix(nextjs): Stop `SentryWebpackPlugin` from uploading unnecessary files (#3845)
+- fix(react): Require ReactElement in ErrorBoundary props and render (#3857)
+- fix(tests): Allow tests to run on Windows without WSL (#3813)
+- fix(utils): Fix false-positive circular references when normalizing `Event` objects (#3864)
+- fix(vue): Make Router.name type optional to match VueRouter (#3843)
+- ref(core): Prevent redundant setup work (#3862)
+- ref(nextjs): Stop reinitializing the server SDK unnecessarily (#3860)
+
 ## 6.10.0
 
 - feat(vue): Rework tracing and add support for `Vue 3` (#3804)

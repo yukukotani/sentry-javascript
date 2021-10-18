@@ -1,8 +1,18 @@
 import { DsnLike } from './dsn';
 import { Event } from './event';
+import { SentryRequestType } from './request';
 import { Response } from './response';
 import { SdkMetadata } from './sdkmetadata';
 import { Session, SessionAggregates } from './session';
+
+export enum Outcome {
+  BeforeSend = 'before_send',
+  EventProcessor = 'event_processor',
+  NetworkError = 'network_error',
+  QueueOverflow = 'queue_overflow',
+  RateLimitBackoff = 'ratelimit_backoff',
+  SampleRate = 'sample_rate',
+}
 
 /** Transport used sending data to Sentry */
 export interface Transport {
@@ -21,11 +31,19 @@ export interface Transport {
   sendSession?(session: Session | SessionAggregates): PromiseLike<Response>;
 
   /**
-   * Call this function to wait until all pending requests have been sent.
+   * Wait for all events to be sent or the timeout to expire, whichever comes first.
    *
-   * @param timeout Number time in ms to wait until the buffer is drained.
+   * @param timeout Maximum time in ms the transport should wait for events to be flushed. Omitting this parameter will
+   *   cause the transport to wait until all events are sent before resolving the promise.
+   * @returns A promise that will resolve with `true` if all events are sent before the timeout, or `false` if there are
+   * still events in the queue when the timeout is reached.
    */
   close(timeout?: number): PromiseLike<boolean>;
+
+  /**
+   * Increment the counter for the specific client outcome
+   */
+  recordLostEvent?(type: Outcome, category: SentryRequestType): void;
 }
 
 /** JSDoc */
@@ -47,6 +65,8 @@ export interface TransportOptions {
   fetchParameters?: { [key: string]: string };
   /** The envelope tunnel to use. */
   tunnel?: string;
+  /** Send SDK Client Reports. Enabled by default. */
+  sendClientReports?: boolean;
   /**
    * Set of metadata about the SDK that can be internally used to enhance envelopes and events,
    * and provide additional data about every request.
