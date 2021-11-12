@@ -15,6 +15,7 @@ import {
   FIREFOX_43_EVAL,
   FIREFOX_44_NS_EXCEPTION,
   FIREFOX_50_RESOURCE_URL,
+  FIREFOX_FILE_IDENTIFIER,
   IE_10,
   IE_11,
   IE_11_EVAL,
@@ -866,6 +867,19 @@ describe('Tracekit - Original Tests', () => {
       args: [],
       line: 33,
       column: 9,
+    });
+  });
+
+  it('should parse Firefox errors with `file` inside an identifier', () => {
+    const stackFrames = computeStackTrace(FIREFOX_FILE_IDENTIFIER);
+    expect(stackFrames).toBeTruthy();
+    expect(stackFrames.stack.length).toBe(3);
+    expect(stackFrames.stack[2]).toEqual({
+      args: [],
+      column: 1018410,
+      func: 'handleProfileResult',
+      line: 146,
+      url: 'https://www.random_website.com/main.4a4119c3cdfd10266d84.js',
     });
   });
 
