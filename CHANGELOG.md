@@ -4,6 +4,10 @@
 
 - "You miss 100 percent of the chances you don't take. — Wayne Gretzky" — Michael Scott
 
+## 6.15.1-beta.0
+
+- ref(dev): Unify typescript config files
+
 ## 6.15.0
 
 - fix(browser): Capture stacktrace on `DOMExceptions`, if possible (#4160)
