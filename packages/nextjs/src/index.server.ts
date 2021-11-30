@@ -6,7 +6,7 @@ import { escapeStringForRegex, logger } from '@sentry/utils';
 import * as domainModule from 'domain';
 import * as path from 'path';
 
-import { instrumentServer } from './utils/instrumentServer';
+// import { instrumentServer } from './utils/instrumentServer';
 import { MetadataBuilder } from './utils/metadataBuilder';
 import { NextjsOptions } from './utils/nextjsOptions';
 import { addIntegration } from './utils/userIntegrations';
