@@ -120,4 +120,4 @@ export { withSentryConfig } from './config';
 export { withSentry } from './utils/withSentry';
 
 // wrap various server methods to enable error monitoring and tracing
-instrumentServer();
+// instrumentServer();
