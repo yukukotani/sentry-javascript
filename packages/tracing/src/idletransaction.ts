@@ -7,6 +7,7 @@ import { Span, SpanRecorder } from './span';
 import { Transaction } from './transaction';
 
 export const DEFAULT_IDLE_TIMEOUT = 1000;
+export const DEFAULT_FINAL_TIMEOUT = 10000;
 export const HEARTBEAT_INTERVAL = 5000;
 
 /**
@@ -56,12 +57,6 @@ export class IdleTransaction extends Transaction {
   // Activities store a list of active spans
   public activities: Record<string, boolean> = {};
 
-  // Track state of activities in previous heartbeat
-  private _prevHeartbeatString: string | undefined;
-
-  // Amount of times heartbeat has counted. Will cause transaction to finish after 3 beats.
-  private _heartbeatCounter: number = 0;
-
   // We should not use heartbeat if we finished a transaction
   private _finished: boolean = false;
 
@@ -81,6 +76,7 @@ export class IdleTransaction extends Transaction {
      * @default 1000
      */
     private readonly _idleTimeout: number = DEFAULT_IDLE_TIMEOUT,
+    private readonly _finalTimeout: number = DEFAULT_FINAL_TIMEOUT,
     // Whether or not the transaction should put itself on the scope when it starts and pop itself off when it ends
     private readonly _onScope: boolean = false,
   ) {
@@ -97,14 +93,20 @@ export class IdleTransaction extends Transaction {
     }
 
     this._initTimeout = setTimeout(() => {
-      if (!this._finished) {
-        this.finish();
-      }
+      this.finish();
     }, this._idleTimeout);
+
+    setTimeout(() => {
+      this.finish();
+    }, this._finalTimeout);
   }
 
   /** {@inheritDoc} */
   public finish(endTimestamp: number = timestampWithMs()): string | undefined {
+    if (this._finished) {
+      return undefined;
+    }
+
     this._finished = true;
     this.activities = {};
 
@@ -167,24 +169,12 @@ export class IdleTransaction extends Transaction {
    */
   public initSpanRecorder(maxlen?: number): void {
     if (!this.spanRecorder) {
-      const pushActivity = (id: string): void => {
-        if (this._finished) {
-          return;
-        }
-        this._pushActivity(id);
-      };
-      const popActivity = (id: string): void => {
-        if (this._finished) {
-          return;
-        }
-        this._popActivity(id);
-      };
-
-      this.spanRecorder = new IdleTransactionSpanRecorder(pushActivity, popActivity, this.spanId, maxlen);
-
-      // Start heartbeat so that transactions do not run forever.
-      logger.log('Starting heartbeat');
-      this._pingHeartbeat();
+      this.spanRecorder = new IdleTransactionSpanRecorder(
+        this._pushActivity.bind(this),
+        this._popActivity.bind(this),
+        this.spanId,
+        maxlen,
+      );
     }
     this.spanRecorder.add(this);
   }
@@ -222,52 +212,12 @@ export class IdleTransaction extends Transaction {
       const end = timestampWithMs() + timeout / 1000;
 
       setTimeout(() => {
-        if (!this._finished) {
+        if (!Object.keys(this.activities).length) {
           this.setTag(FINISH_REASON_TAG, IDLE_TRANSACTION_FINISH_REASONS[1]);
           this.finish(end);
         }
       }, timeout);
     }
-  }
-
-  /**
-   * Checks when entries of this.activities are not changing for 3 beats.
-   * If this occurs we finish the transaction.
-   */
-  private _beat(): void {
-    // We should not be running heartbeat if the idle transaction is finished.
-    if (this._finished) {
-      return;
-    }
-
-    const heartbeatString = Object.keys(this.activities).join('');
-
-    if (heartbeatString === this._prevHeartbeatString) {
-      this._heartbeatCounter += 1;
-    } else {
-      this._heartbeatCounter = 1;
-    }
-
-    this._prevHeartbeatString = heartbeatString;
-
-    if (this._heartbeatCounter >= 3) {
-      logger.log(`[Tracing] Transaction finished because of no change for 3 heart beats`);
-      this.setStatus('deadline_exceeded');
-      this.setTag(FINISH_REASON_TAG, IDLE_TRANSACTION_FINISH_REASONS[0]);
-      this.finish();
-    } else {
-      this._pingHeartbeat();
-    }
-  }
-
-  /**
-   * Pings the heartbeat
-   */
-  private _pingHeartbeat(): void {
-    logger.log(`pinging Heartbeat -> current counter: ${this._heartbeatCounter}`);
-    setTimeout(() => {
-      this._beat();
-    }, HEARTBEAT_INTERVAL);
   }
 }
 
