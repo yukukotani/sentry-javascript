@@ -6,6 +6,8 @@ import { formatComponentName } from './components';
 import { DEFAULT_HOOKS } from './constants';
 import { Hook, Operation, TracingOptions, ViewModel, Vue } from './types';
 
+const VUE_OP = 'ui.vue';
+
 type Mixins = Parameters<Vue['mixin']>[0];
 
 interface VueSentry extends ViewModel {
@@ -75,7 +77,7 @@ export const createTracingMixins = (options: TracingOptions): Mixins => {
               this.$_sentryRootSpan ||
               activeTransaction.startChild({
                 description: 'Application Render',
-                op: 'vue',
+                op: VUE_OP,
               });
           }
         }
@@ -93,21 +95,25 @@ export const createTracingMixins = (options: TracingOptions): Mixins => {
 
         this.$_sentrySpans = this.$_sentrySpans || {};
 
-        // On the first handler call (before), it'll be undefined, as `$once` will add it in the future.
-        // However, on the second call (after), it'll be already in place.
-        const span = this.$_sentrySpans[operation];
-
-        if (span) {
-          span.finish();
-          finishRootSpan(this, timestampInSeconds(), options.timeout);
-        } else {
+        // Start a new span if current hook is a 'before' hook.
+        // Otherwise, retrieve the current span and finish it.
+        if (internalHook == internalHooks[0]) {
           const activeTransaction = this.$root?.$_sentryRootSpan || getActiveTransaction();
           if (activeTransaction) {
             this.$_sentrySpans[operation] = activeTransaction.startChild({
               description: `Vue <${name}>`,
-              op: operation,
+              op: `${VUE_OP}.${operation}`,
             });
           }
+        } else {
+          // The span should already be added via the first handler call (in the 'before' hook)
+          const span = this.$_sentrySpans[operation];
+          // The before hook did not start the tracking span, so the span was not added.
+          // This is probably because it happened before there is an active transaction
+          if (!span) return;
+
+          span.finish();
+          finishRootSpan(this, timestampInSeconds(), options.timeout);
         }
       };
     }

@@ -1,6 +1,6 @@
 import { BaseClient, buildMetadata, Scope } from '@sentry/core';
 import { SessionFlusher } from '@sentry/hub';
-import { Event, EventHint, RequestSessionStatus } from '@sentry/types';
+import { Event, EventHint } from '@sentry/types';
 import { logger } from '@sentry/utils';
 
 import { NodeBackend } from './backend';
@@ -38,8 +38,8 @@ export class NodeClient extends BaseClient<NodeBackend, NodeOptions> {
 
       // Necessary checks to ensure this is code block is executed only within a request
       // Should override the status only if `requestSession.status` is `Ok`, which is its initial stage
-      if (requestSession && requestSession.status === RequestSessionStatus.Ok) {
-        requestSession.status = RequestSessionStatus.Errored;
+      if (requestSession && requestSession.status === 'ok') {
+        requestSession.status = 'errored';
       }
     }
 
@@ -64,8 +64,8 @@ export class NodeClient extends BaseClient<NodeBackend, NodeOptions> {
 
         // Ensure that this is happening within the bounds of a request, and make sure not to override
         // Session Status if Errored / Crashed
-        if (requestSession && requestSession.status === RequestSessionStatus.Ok) {
-          requestSession.status = RequestSessionStatus.Errored;
+        if (requestSession && requestSession.status === 'ok') {
+          requestSession.status = 'errored';
         }
       }
     }

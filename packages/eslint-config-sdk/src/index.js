@@ -164,7 +164,7 @@ module.exports = {
       env: {
         jest: true,
       },
-      files: ['*.test.ts', '*.test.tsx', '*.test.js', '*.test.jsx', 'test/**/*.ts', 'test/**/*.js'],
+      files: ['test.ts', '*.test.ts', '*.test.tsx', '*.test.js', '*.test.jsx', 'test/**/*.ts', 'test/**/*.js'],
       rules: {
         'max-lines': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
@@ -179,11 +179,18 @@ module.exports = {
       },
     },
     {
-      // Configuration for config files like webpack/rollback
+      // Configuration for config files like webpack/rollup
       files: ['*.config.js'],
       parserOptions: {
         sourceType: 'module',
         ecmaVersion: 2018,
+      },
+    },
+    {
+      // Configuration for jsx and tsx files
+      files: ['*.tsx', '*.jsx', '*.test.tsx', '*.test.jsx'],
+      parserOptions: {
+        jsx: true,
       },
     },
   ],
@@ -208,7 +215,22 @@ module.exports = {
     'max-lines': 'error',
 
     // We should require a whitespace beginning a comment
-    'spaced-comment': 'error',
+    'spaced-comment': [
+      'error',
+      'always',
+      {
+        line: {
+          // this lets us use triple-slash directives
+          markers: ['/'],
+        },
+        block: {
+          // comments of the form /* ..... */ should always have whitespace before the closing `*/` marker...
+          balanced: true,
+          // ... unless they're jsdoc-style block comments, which end with `**/`
+          exceptions: ['*'],
+        },
+      },
+    ],
 
     // Disallow usage of bitwise operators - this makes it an opt in operation
     'no-bitwise': 'error',
@@ -227,5 +249,10 @@ module.exports = {
 
     // Make sure for in loops check for properties
     'guard-for-in': 'error',
+
+    // Make sure that we are returning in the callbacks passed into `.map`,
+    // `.filter` and `.reduce`. If we are not, we should be using
+    // `.forEach()` or an explicit for loop.
+    'array-callback-return': ['error', { allowImplicit: true }],
   },
 };
