@@ -20,20 +20,18 @@
     "@angular/core": "10.x || 11.x || 12.x || 13.x",
     "@angular/router": "10.x || 11.x || 12.x || 13.x"
   },
-  "private": true,
-
   "dependencies": {
     "@sentry/browser": "^6.18.0",
     "@sentry/types": "^6.18.0",
     "@sentry/utils": "^6.18.0",
-    "rxjs": "~6.6.0",
+    "rxjs": "^6.6.0",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@angular/common": "~10.2.5",
-    "@angular/compiler": "~10.2.5",
     "@angular/core": "~10.2.5",
     "@angular/router": "~10.2.5",
+    "@angular/compiler": "~10.2.5",
     "@angular-devkit/build-angular": "~0.1002.4",
     "@angular/cli": "~10.2.4",
     "@angular/compiler-cli": "~10.2.5",
