@@ -67,8 +67,7 @@
     "lint": "run-s lint:prettier lint:eslint",
     "lint:eslint": "eslint . --cache --cache-location '../../eslintcache/' --format stylish",
     "lint:prettier": "prettier --check \"{src,test}/**/*.ts\"",
-    "pack": "cd ./dist && npm pack",
-    "pack:legacy": "npm pack"
+    "pack": "npm pack"
   },
   "volta": {
     "extends": "../../package.json"
