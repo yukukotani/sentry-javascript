@@ -44,7 +44,7 @@
     "zone.js": "~0.10.2"
   },
   "scripts": {
-    "build": "run-p build:ngc",
+    "build": "yarn build:ngc",
     "build:legacy": "run-p build:esm build:cjs",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:dev": "run-s build",
@@ -67,7 +67,8 @@
     "lint": "run-s lint:prettier lint:eslint",
     "lint:eslint": "eslint . --cache --cache-location '../../eslintcache/' --format stylish",
     "lint:prettier": "prettier --check \"{src,test}/**/*.ts\"",
-    "pack": "npm pack"
+    "pack": "npm pack ./build",
+    "pack:legacy": "npm pack"
   },
   "volta": {
     "extends": "../../package.json"
