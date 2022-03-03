@@ -287,12 +287,12 @@ describe('requestHandler', () => {
   it('patches `res.end` when `flushTimeout` is specified', () => {
     const flush = jest.spyOn(SDK, 'flush').mockResolvedValue(true);
 
-    const handler = requestHandler({ flushTimeout: 1337 });
-    handler(req, res, next);
+    const sentryRequestMiddleware = requestHandler({ flushTimeout: 1337 });
+    sentryRequestMiddleware(req, res, next);
     res.end('ok');
 
     setImmediate(() => {
-      expect(flush).toBeCalledWith(1337);
+      expect(flush).toHaveBeenCalledWith(1337);
       expect(res.finished).toBe(true);
     });
   });
@@ -300,8 +300,8 @@ describe('requestHandler', () => {
   it('prevents errors thrown during `flush` from breaking the response', async () => {
     jest.spyOn(SDK, 'flush').mockRejectedValue(new SentryError('HTTP Error (429)'));
 
-    const handler = requestHandler({ flushTimeout: 1337 });
-    handler(req, res, next);
+    const sentryRequestMiddleware = requestHandler({ flushTimeout: 1337 });
+    sentryRequestMiddleware(req, res, next);
     res.end('ok');
 
     setImmediate(() => {
