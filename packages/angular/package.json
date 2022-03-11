@@ -7,7 +7,7 @@
   "author": "Sentry",
   "license": "MIT",
   "engines": {
-    "node": ">=6"
+    "node": ">=10"
   },
   "main": "dist/index.js",
   "module": "esm/index.js",
@@ -18,13 +18,13 @@
   "peerDependencies": {
     "@angular/common": "10.x || 11.x || 12.x || 13.x",
     "@angular/core": "10.x || 11.x || 12.x || 13.x",
-    "@angular/router": "10.x || 11.x || 12.x || 13.x"
+    "@angular/router": "10.x || 11.x || 12.x || 13.x",
+    "rxjs": "^6.5.5 || ^7.x"
   },
   "dependencies": {
     "@sentry/browser": "6.18.0",
     "@sentry/types": "6.18.0",
     "@sentry/utils": "6.18.0",
-    "rxjs": "^6.6.0",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
