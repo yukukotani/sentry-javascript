@@ -18,7 +18,7 @@
   "dependencies": {
     "@sentry/browser": "6.19.1",
     "@sentry/types": "6.19.1",
-    "tslib": "^1.9.3"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@types/jest-environment-puppeteer": "^4.4.0",

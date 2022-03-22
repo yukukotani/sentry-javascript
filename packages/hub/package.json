@@ -18,7 +18,7 @@
   "dependencies": {
     "@sentry/types": "6.19.1",
     "@sentry/utils": "6.19.1",
-    "tslib": "^1.9.3"
+    "tslib": "^2.3.1"
   },
   "scripts": {
     "build": "run-p build:cjs build:esm build:types",

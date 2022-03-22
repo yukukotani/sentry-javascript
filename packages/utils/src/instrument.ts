@@ -11,7 +11,7 @@ import { fill } from './object';
 import { getFunctionName } from './stacktrace';
 import { supportsHistory, supportsNativeFetch } from './supports';
 
-const global = getGlobalObject<Window>();
+const global = getGlobalObject<Window & { console: Console }>();
 
 type InstrumentHandlerType =
   | 'console'

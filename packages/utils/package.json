@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@sentry/types": "6.19.1",
-    "tslib": "^1.9.3"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",

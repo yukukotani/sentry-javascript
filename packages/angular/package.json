@@ -25,7 +25,7 @@
     "@sentry/types": "6.19.1",
     "@sentry/utils": "6.19.1",
     "rxjs": "^6.6.0",
-    "tslib": "^1.9.3"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@angular/common": "^10.0.3",

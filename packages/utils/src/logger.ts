@@ -5,7 +5,7 @@ import { isDebugBuild } from './env';
 import { getGlobalObject } from './global';
 
 // TODO: Implement different loggers for different environments
-const global = getGlobalObject<Window | NodeJS.Global>();
+const global = getGlobalObject<(Window & { console: Console }) | NodeJS.Global>();
 
 /** Prefix for logging strings */
 const PREFIX = 'Sentry Logger ';
@@ -25,7 +25,7 @@ interface ExtensibleConsole extends Console {
  * @returns The results of the callback
  */
 export function consoleSandbox(callback: () => any): any {
-  const global = getGlobalObject<Window>();
+  const global = getGlobalObject<Window & { console: Console }>();
 
   if (!('console' in global)) {
     return callback();
