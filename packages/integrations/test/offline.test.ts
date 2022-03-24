@@ -166,6 +166,81 @@ function initIntegration(options: { maxStoredEvents?: number } = {}): void {
   eventProcessors = [];
   events = [];
 
+  /*
+  Object.defineProperty(utils, 'getGlobalObject', {
+    configurable: true,
+    value: () => ({
+      addEventListener: (_windowEvent, callback) => {
+        eventListeners.push(callback);
+      },
+      navigator: {
+        onLine: online,
+      },
+    } as any)
+  });
+  */
+
+  /*
+  utils.getGlobalObject = jest.fn(() => ({
+    addEventListener: (_windowEvent, callback) => {
+      eventListeners.push(callback);
+    },
+    navigator: {
+      onLine: online,
+    },
+  }));
+  */
+
+  /*
+  jest.mock('@sentry/utils', () => {
+    const original = jest.requireActual('@sentry/utils');
+    return {
+      ...original,
+
+      getGlobalObject(): any {
+        return {
+          addEventListener: (_windowEvent, callback) => {
+            eventListeners.push(callback);
+          },
+          navigator: {
+            onLine: online,
+          },
+        };
+      },
+    };
+  });
+  */
+
+  utils.getGlobalObject<any>().addEventListener = (_windowEvent: Event, callback) => {
+    eventListeners.push(callback);
+  };
+  utils.getGlobalObject<any>().navigator = {
+    onLine: online,
+  };
+
+  /*
+  jest.mock('../../utils/src/global.ts', () => {
+    const originalModule = jest.requireActual('../../utils/src/global.ts');
+
+    const mockedGetGlobalObject = {
+      __esModule: true,
+      ...originalModule,
+      default: jest.fn(() => 'mocked global'),
+      getGlobalObject: jest.fn(() => ({
+        addEventListener: (_windowEvent, callback) => {
+          eventListeners.push(callback);
+        },
+        navigator: {
+          onLine: online,
+        },
+      })),
+    };
+
+    return mockedGetGlobalObject;
+  });
+  */
+
+  /*
   jest.spyOn(utils, 'getGlobalObject').mockImplementation(
     () =>
       ({
@@ -178,6 +253,7 @@ function initIntegration(options: { maxStoredEvents?: number } = {}): void {
       } as any),
   );
 
+  */
   integration = new Offline(options);
 }
 
