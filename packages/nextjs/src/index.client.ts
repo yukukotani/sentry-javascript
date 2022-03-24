@@ -1,5 +1,5 @@
 import { configureScope, init as reactInit, Integrations as BrowserIntegrations } from '@sentry/react';
-import { BrowserTracing, defaultRequestInstrumentationOptions } from '@sentry/tracing';
+import { BrowserTracing, defaultRequestInstrumentationOptions, hasTracingEnabled } from '@sentry/tracing';
 import { isTracingBuild } from '@sentry/utils';
 
 import { nextRouterInstrumentation } from './performance/client';
@@ -35,9 +35,7 @@ export function init(options: NextjsOptions): void {
 
   // Only add BrowserTracing if a tracesSampleRate or tracesSampler is set
   const integrations =
-    isTracingBuild() && options.tracesSampleRate === undefined && options.tracesSampler === undefined
-      ? options.integrations
-      : createClientIntegrations(options.integrations);
+    isTracingBuild() && hasTracingEnabled() ? createClientIntegrations(options.integrations) : options.integrations;
 
   reactInit({
     ...options,
