@@ -19,6 +19,17 @@ export function isDebugBuild(): boolean {
   return __SENTRY_DEBUG__;
 }
 
+const __SENTRY_TRACING__ = true;
+
+/**
+ * Figures out if we're building with tracing functionality.
+ *
+ * @returns true if the build should include tracing code
+ */
+export function isTracingBuild(): boolean {
+  return __SENTRY_TRACING__;
+}
+
 /**
  * Figures out if we're building a browser bundle.
  *
