@@ -1,3 +1,5 @@
+import { isTracingBuild } from '@sentry/utils';
+
 import { addExtensionMethods } from './hubextensions';
 import * as Integrations from './integrations';
 
@@ -35,7 +37,7 @@ export { IdleTransaction } from './idletransaction';
 export { startIdleTransaction } from './hubextensions';
 
 // We are patching the global object with our hub extension methods
-addExtensionMethods();
+isTracingBuild() && addExtensionMethods();
 
 export { addExtensionMethods };
 
