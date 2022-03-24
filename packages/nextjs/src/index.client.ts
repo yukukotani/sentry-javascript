@@ -11,8 +11,8 @@ export * from '@sentry/react';
 export { nextRouterInstrumentation } from './performance/client';
 
 // TODO in v7, replace this with the commented-out version below (this will make BrowserTracing treeshakable)
-export const Integrations = { ...DefaultIntegrations, BrowserTracing };
-// export const Integrations = DefaultIntegrations;
+// export const Integrations = { ...DefaultIntegrations, BrowserTracing };
+export const Integrations = DefaultIntegrations;
 
 // This is already exported as part of `Integrations` above (and for the moment will remain so for
 // backwards compatibility), but that interferes with treeshaking, so we also export it separately
