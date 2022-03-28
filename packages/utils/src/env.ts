@@ -8,7 +8,8 @@
 
 const __SENTRY_BROWSER_BUNDLE__ = true;
 
-const __SENTRY_DEBUG__ = true;
+const __SENTRY_DEBUG__ = false;
+// const __SENTRY_DEBUG__ = true;
 
 /**
  * Figures out if we're building with debug functionality.
@@ -19,7 +20,8 @@ export function isDebugBuild(): boolean {
   return __SENTRY_DEBUG__;
 }
 
-const __SENTRY_TRACING__ = true;
+const __SENTRY_TRACING__ = false;
+// const __SENTRY_TRACING__ = true;
 
 /**
  * Figures out if we're building with tracing functionality.
@@ -27,6 +29,7 @@ const __SENTRY_TRACING__ = true;
  * @returns true if the build should include tracing code
  */
 export function isTracingBuild(): boolean {
+  // return false;
   return __SENTRY_TRACING__;
 }
 
