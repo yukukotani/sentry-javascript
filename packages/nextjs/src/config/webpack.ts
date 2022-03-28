@@ -74,6 +74,14 @@ export function constructWebpackConfigFunction(
         ? !userNextConfig.sentry?.disableServerWebpackPlugin
         : !userNextConfig.sentry?.disableClientWebpackPlugin);
 
+    newConfig.plugins = newConfig.plugins || [];
+
+    newConfig.optimization = {
+      // @ts-ignore not worth adding to the type since this is a temporary debugging change
+      ...incomingConfig.optimization,
+      mangleExports: false,
+    };
+
     if (enableWebpackPlugin) {
       // TODO Handle possibility that user is using `SourceMapDevToolPlugin` (see
       // https://webpack.js.org/plugins/source-map-dev-tool-plugin/)
@@ -90,7 +98,6 @@ export function constructWebpackConfigFunction(
           userNextConfig.sentry?.hideSourceMaps && !buildContext.isServer ? 'hidden-source-map' : 'source-map';
       }
 
-      newConfig.plugins = newConfig.plugins || [];
       newConfig.plugins.push(
         new SentryWebpackPlugin(getWebpackPluginOptions(buildContext, userSentryWebpackPluginOptions)),
       );
