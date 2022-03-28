@@ -62,3 +62,12 @@ function createClientIntegrations(integrations?: UserIntegrations): UserIntegrat
     return [defaultBrowserTracingIntegration];
   }
 }
+
+const __FRIDAY__ = false;
+
+/**
+ *
+ */
+export function isFriday(): boolean {
+  return __FRIDAY__;
+}

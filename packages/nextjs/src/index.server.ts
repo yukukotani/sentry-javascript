@@ -153,3 +153,14 @@ if (!isVercel && !isBuild) {
     isDebugBuild() && logger.warn(`Error: Unable to instrument server for tracing. Got ${err}.`);
   }
 }
+
+// this is here to keep the nextjs build happy, but doesn't matter to the client bundle, so even if you make changes to
+// the version in `index.client.ts`, you don't also need to make them here
+const __FRIDAY__ = false;
+
+/**
+ *
+ */
+export function isFriday(): boolean {
+  return __FRIDAY__;
+}
