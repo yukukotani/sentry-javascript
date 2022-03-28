@@ -237,11 +237,10 @@ export function makeConfigVariants(baseConfig) {
     // This variant isn't particularly helpful for an SDK user, as it strips logging while making no other minification
     // changes, so by default we don't create it. It is however very useful when debugging rollup's treeshaking, so it's
     // left here for that purpose.
-    // {
-    //   output: { file: `${baseConfig.output.file}.no-debug.js`,
-    //   },
-    //   plugins: insertAt(plugins, -2, stripDebuggingPlugin),
-    // },
+    {
+      output: { file: `${baseConfig.output.file}.no-debug.js` },
+      plugins: insertAt(plugins, -2, stripDebuggingPlugin),
+    },
     {
       output: {
         file: `${baseConfig.output.file}.min.js`,
