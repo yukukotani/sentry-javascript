@@ -28,7 +28,6 @@ export const Integrations = DefaultIntegrations;
 //
 // import { BrowserTracing } from '@sentry/nextjs';
 // const instance = new BrowserTracing();
-export { BrowserTracing };
 
 /** Inits the Sentry NextJS SDK on the browser with the React SDK. */
 export function init(options: NextjsOptions): void {
