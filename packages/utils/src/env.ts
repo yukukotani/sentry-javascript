@@ -6,7 +6,7 @@
  * `logger` and preventing node-related code from appearing in browser bundles.
  */
 
-declare const __SENTRY_BROWSER_BUNDLE__: boolean | undefined;
+const __SENTRY_BROWSER_BUNDLE__ = true;
 
 const __SENTRY_DEBUG__ = true;
 
@@ -36,5 +36,5 @@ export function isTracingBuild(): boolean {
  * @returns true if this is a browser bundle build.
  */
 export function isBrowserBundle(): boolean {
-  return typeof __SENTRY_BROWSER_BUNDLE__ !== 'undefined' && !!__SENTRY_BROWSER_BUNDLE__;
+  return __SENTRY_BROWSER_BUNDLE__;
 }
