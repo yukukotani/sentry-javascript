@@ -1,9 +1,8 @@
 import { isTracingBuild } from '@sentry/utils';
 
 import { addExtensionMethods } from './hubextensions';
-import * as Integrations from './integrations';
 
-export { Integrations };
+export * from './integrations';
 
 // This is already exported as part of `Integrations` above (and for the moment will remain so for
 // backwards compatibility), but that interferes with treeshaking, so we also export it separately
@@ -21,7 +20,6 @@ export { Integrations };
 // const instance = new BrowserTracing();
 //
 // For an example of of the new usage of BrowserTracing, see @sentry/nextjs index.client.ts
-export { BrowserTracing } from './browser';
 
 export { Span, SpanStatusType, spanStatusfromHttpCode } from './span';
 // eslint-disable-next-line deprecation/deprecation
